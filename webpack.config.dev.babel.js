@@ -2,6 +2,7 @@ import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 
 const getPlugins = function (environment, isDev) {
   return [
@@ -16,6 +17,7 @@ const getPlugins = function (environment, isDev) {
       __DEV__: isDev
     }),
     new webpack.HotModuleReplacementPlugin(),
+    new MiniCSSExtractPlugin({filename: `assets/[name]-[contenthash].css`}),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       reportFilename: 'report.html',
@@ -59,7 +61,7 @@ const getLoaders = function () {
           }
         }
       },
-      {test: /\.css$/, use: [{loader: 'style-loader'}, {loader: 'css-loader'}]},
+      {test: /\.css|scss$/, use: [{loader: MiniCSSExtractPlugin.loader}, 'css-loader']},
       {test: /\.(ttf|eot|mp4)/, use: {loader: 'file-loader', options: {name: 'assets/[name]-[hash].[ext]', limit: 819200}}},
       {test: /\.(otf|woff|woff2)/, use: {loader: 'url-loader', options: {name: 'assets/[name]-[hash].[ext]', limit: 819200}}},
       {
